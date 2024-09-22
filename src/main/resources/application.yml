@@ -3,17 +3,13 @@ spring:
     name: back
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/permission-manager-db
+    url: jdbc:postgresql://localhost:5433/permission-manager-db
     username: sa
     password: password
   jpa:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  security:
-    user:
-      name: permission-manager
-      password: admin
 
 server:
-  port: 8081
+  port: 8082
