@@ -11,4 +11,7 @@
 
 .idea/
 
+.build/
+
 *.lock
+
