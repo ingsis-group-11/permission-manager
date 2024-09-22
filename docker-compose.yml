@@ -5,13 +5,13 @@ services:
     container_name: permission-manager-db
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
       POSTGRES_DB: permission-manager-db
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./permission:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -19,6 +19,6 @@ services:
       PGADMIN_DEFAULT_EMAIL: "tomi.serra@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
-      - "80:80"
+      - "81:80"
     depends_on:
       - db
