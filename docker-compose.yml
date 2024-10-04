@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api:
-    container_name: "snippet-manager-api"
+    container_name: "permission-manager-api"
     build:
       context: .
       dockerfile: Dockerfile.multi
@@ -11,18 +11,18 @@ services:
     environment: # Poner estas variables en un archivo .env
       DB_USER: sa
       DB_PASSWORD: password
-      DB_NAME: compose-db
+      DB_NAME: permission-manager-db
       DB_HOST: postgres_db
       DB_PORT: 5433
   db:
-    container_name: snippet-manager-db
+    container_name: permission-manager-db
     image: postgres:latest
     ports:
       - "5433:5432"
     environment: # Poner estas variables en un archivo .env
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: snippet-manager-db
+      POSTGRES_DB: permission-manager-db
     volumes:
       - pgdata:/var/lib/postgresql/data
 
