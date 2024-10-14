@@ -12,8 +12,12 @@ services:
       DB_USER: admin
       DB_PASSWORD: admin
       DB_NAME: permission-manager-db
-      DB_HOST: postgres_db
-      DB_PORT: 5433
+      DB_HOST: db
+      DB_PORT: 5432
+    env_file:
+      - .env
+    depends_on:
+      - db
   db:
     container_name: permission-manager-db
     image: postgres:latest
