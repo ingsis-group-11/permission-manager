@@ -26,15 +26,15 @@ public class PermissionController {
   }
 
   @PostMapping("/api/permission")
-  public ResponseEntity<Boolean> createPermission(@RequestBody PermissionRequestDTO request) {
+  public ResponseEntity<String> createPermission(@RequestBody PermissionRequestDTO request) {
     PermissionType result = permissionService.getPermission(request.getUserId(), request.getSnippetId());
-    return ResponseEntity.ok(result);
+    return ResponseEntity.ok(result.toString());
   }
 
   @PostMapping("/api/new-permission")
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDTO request) {
     PermissionType result = permissionService.newPermission(request.getUserId(), request.getSnippetId(), request.getPermission());
-    return ResponseEntity.ok("Permission created: " + result);
+    return ResponseEntity.ok("Permission created as: " + result);
   }
 }
 
