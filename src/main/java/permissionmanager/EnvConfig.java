@@ -1,4 +1,4 @@
-package permission_manager.permission;
+package permissionmanager;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;

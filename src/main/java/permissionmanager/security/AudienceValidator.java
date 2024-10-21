@@ -1,4 +1,4 @@
-package permission_manager.permission.security;
+package permissionmanager.security;
 
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
