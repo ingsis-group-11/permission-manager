@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UserPermission {
     @Id
     private UUID permissionId;
-    private Long userId;
-    private Long snippetId;
+    private String userId;
+    private String snippetId;
     private PermissionType permission;
 }
