@@ -18,11 +18,11 @@ public class PermissionService {
     return "Processed data: " + data;
   }
 
-  public PermissionType getPermission(Long userId, Long snippetId) {
+  public PermissionType getPermission(String userId, String snippetId) {
     return permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
   }
 
-  public PermissionType newPermission(Long userId, Long snippetId, PermissionType permission) {
+  public PermissionType newPermission(String userId, String snippetId, PermissionType permission) {
     UserPermission userPermission = new UserPermission();
     userPermission.setPermissionId(UUID.randomUUID());
     userPermission.setUserId(userId);
@@ -33,7 +33,7 @@ public class PermissionService {
     return newPermission;
   }
 
-  private PermissionType handlePermission(Long userId, Long snippetId, PermissionType permission) {
+  private PermissionType handlePermission(String userId, String snippetId, PermissionType permission) {
     UserPermission userPermission = permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
     if (userPermission == null) {
       return permission;

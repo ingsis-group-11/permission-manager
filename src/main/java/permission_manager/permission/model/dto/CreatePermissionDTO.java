@@ -5,7 +5,7 @@ import permission_manager.permission.model.entities.PermissionType;
 
 @Getter
 public class CreatePermissionDTO {
-    private Long userId;
-    private Long snippetId;
+    private String userId;
+    private String snippetId;
     private PermissionType permission;
 }

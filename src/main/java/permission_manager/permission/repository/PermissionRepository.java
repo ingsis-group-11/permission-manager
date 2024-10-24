@@ -6,6 +6,6 @@ import permission_manager.permission.model.entities.UserPermission;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<UserPermission, String> {
-    UserPermission findByUserIdAndSnippetId(Long userId, Long snippetId);
+    UserPermission findByUserIdAndSnippetId(String userId, String snippetId);
 }
 
