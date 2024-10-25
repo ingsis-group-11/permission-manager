@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PermissionRequestDTO {
-    private Long userId;
-    private Long snippetId;
+    private String userId;
+    private String snippetId;
 }
