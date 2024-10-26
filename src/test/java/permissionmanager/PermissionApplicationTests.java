@@ -1,4 +1,4 @@
-package permission_manager.permission;
+package permissionmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,19 +1,17 @@
-package permission_manager.permission.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import permission_manager.permission.model.entities.PermissionType;
-import permission_manager.permission.model.entities.UserPermission;
-import permission_manager.permission.repository.PermissionRepository;
+package permissionmanager.service;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import permissionmanager.model.entities.PermissionType;
+import permissionmanager.model.entities.UserPermission;
+import permissionmanager.repository.PermissionRepository;
 
 @Service
 public class PermissionService {
 
-  @Autowired
-  private PermissionRepository permissionRepository;
+  @Autowired private PermissionRepository permissionRepository;
 
   public String processData(String data) {
     return "Processed data: " + data;
@@ -34,12 +32,15 @@ public class PermissionService {
     return newPermission;
   }
 
-  private PermissionType handlePermission(String userId, String snippetId, PermissionType permission) {
-    UserPermission userPermission = permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
+  private PermissionType handlePermission(
+      String userId, String snippetId, PermissionType permission) {
+    UserPermission userPermission =
+        permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
     if (userPermission == null) {
       return permission;
     }
-    if (userPermission.getPermission().equals(PermissionType.READ) && permission == PermissionType.WRITE) {
+    if (userPermission.getPermission().equals(PermissionType.READ)
+        && permission == PermissionType.WRITE) {
       return PermissionType.READ_WRITE;
     }
 
