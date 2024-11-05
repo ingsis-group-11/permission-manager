@@ -16,8 +16,16 @@ spring:
         jwt:
           issuer-uri: ${AUTH_SERVER_URI}
 
+snippet:
+  manager:
+    url: ${SNIPPET_MANAGER_URL:http://localhost:8000}
+
+printscript:
+  service:
+    url: ${PRINTSCRIPT_SERVICE_URL:http://localhost:8004}
+
 auth0:
   audience: ${AUTH0_AUDIENCE}
 
 server:
-  port: 8080
+  port: ${DOCKER_PORT:8003}

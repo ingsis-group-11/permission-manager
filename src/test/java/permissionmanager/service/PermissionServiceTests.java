@@ -1,13 +1,13 @@
-package permission_manager.permission.service;
+package permissionmanager.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import permission_manager.permission.model.entities.PermissionType;
-import permission_manager.permission.model.entities.UserPermission;
-import permission_manager.permission.repository.PermissionRepository;
+import permissionmanager.model.entities.PermissionType;
+import permissionmanager.model.entities.UserPermission;
+import permissionmanager.repository.PermissionRepository;
 
 import java.util.UUID;
 

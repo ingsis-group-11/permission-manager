@@ -1,4 +1,4 @@
-package permission_manager.permission.controller;
+package permissionmanager.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import permission_manager.permission.model.dto.CreatePermissionDTO;
-import permission_manager.permission.model.dto.PermissionRequestDTO;
-import permission_manager.permission.model.entities.PermissionType;
-import permission_manager.permission.service.PermissionService;
+import permissionmanager.model.dto.CreatePermissionDto;
+import permissionmanager.model.dto.PermissionRequestDto;
+import permissionmanager.model.entities.PermissionType;
+import permissionmanager.service.PermissionService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -49,7 +49,7 @@ public class PermissionControllerTest {
         String expectedResponse = "READ";
         PermissionType permissionType = PermissionType.READ;
 
-        CreatePermissionDTO request = new CreatePermissionDTO();
+        CreatePermissionDto request = new CreatePermissionDto();
         request.setUserId(userId);
         request.setSnippetId(snippetId);
         request.setPermission(permissionType);
@@ -71,7 +71,7 @@ public class PermissionControllerTest {
         String snippetId = "1";
         String expectedResponse = "READ";
 
-        PermissionRequestDTO request = new PermissionRequestDTO();
+        PermissionRequestDto request = new PermissionRequestDto();
         request.setUserId(userId);
         request.setSnippetId(snippetId);
 

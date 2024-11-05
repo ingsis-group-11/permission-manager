@@ -1,13 +1,12 @@
-package permission_manager.permission.service;
+package permissionmanager.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import permission_manager.permission.model.entities.PermissionType;
-import permission_manager.permission.model.entities.UserPermission;
-import permission_manager.permission.repository.PermissionRepository;
-
+import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import permissionmanager.model.entities.PermissionType;
+import permissionmanager.model.entities.UserPermission;
+import permissionmanager.repository.PermissionRepository;
 
 @Service
 public class PermissionService {
@@ -48,10 +47,15 @@ public class PermissionService {
     if (userPermission == null) {
       return permission;
     }
-    if (userPermission.getPermission().equals(PermissionType.READ) && permission == PermissionType.WRITE) {
+    if (userPermission.getPermission().equals(PermissionType.READ)
+        && permission == PermissionType.WRITE) {
       return PermissionType.READ_WRITE;
     }
 
     return userPermission.getPermission();
+  }
+
+  public List<String> getSnippetsId(Long from, Long to, String userId) {
+    return permissionRepository.getSnippetsId(from, to, userId);
   }
 }
