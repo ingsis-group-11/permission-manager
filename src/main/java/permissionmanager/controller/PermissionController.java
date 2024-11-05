@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import permissionmanager.model.dto.CreatePermissionDto;
 import permissionmanager.model.dto.PermissionRequestDto;
-import permissionmanager.model.entities.PermissionType;
 import permissionmanager.service.PermissionService;
 
 @RestController
@@ -40,23 +39,21 @@ public class PermissionController {
 
   @PostMapping("/api/permission")
   public ResponseEntity<String> getPermission(@RequestBody PermissionRequestDto request) {
-    return ResponseEntity.ok
-            (permissionService
-                    .getPermission(request.getUserId(), request.getSnippetId()));
+    return ResponseEntity.ok(
+        permissionService.getPermission(request.getUserId(), request.getSnippetId()));
   }
 
   @PostMapping("/api/new-permission")
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDto request) {
-    return ResponseEntity.ok
-            (permissionService
-                    .newPermission(request.getUserId(), request.getSnippetId(), request.getPermission()));
-
+    return ResponseEntity.ok(
+        permissionService.newPermission(
+            request.getUserId(), request.getSnippetId(), request.getPermission()));
   }
 
   @GetMapping("/api/get-snippets")
-    public ResponseEntity<List<String>> getSnippets(
-       @RequestParam("from") Long from, @RequestParam("to") Long to) {
-     List<String> snippets = permissionService.getSnippetsId(from, to, getUserId());
-      return ResponseEntity.ok(snippets);
+  public ResponseEntity<List<String>> getSnippets(
+      @RequestParam("from") Long from, @RequestParam("to") Long to) {
+    List<String> snippets = permissionService.getSnippetsId(from, to, getUserId());
+    return ResponseEntity.ok(snippets);
   }
 }

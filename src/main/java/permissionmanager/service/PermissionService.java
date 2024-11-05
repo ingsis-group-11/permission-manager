@@ -11,8 +11,7 @@ import permissionmanager.repository.PermissionRepository;
 @Service
 public class PermissionService {
 
-  @Autowired
-  private PermissionRepository permissionRepository;
+  @Autowired private PermissionRepository permissionRepository;
 
   public String processData(String data) {
     return "Processed data: " + data;
@@ -20,10 +19,11 @@ public class PermissionService {
 
   public String getPermission(String userId, String snippetId) {
     try {
-        PermissionType result = permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
-        return result.toString();
-        } catch (Exception e) {
-        throw new RuntimeException("Error getting permission: " + e.getMessage());
+      PermissionType result =
+          permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
+      return result.toString();
+    } catch (Exception e) {
+      throw new RuntimeException("Error getting permission: " + e.getMessage());
     }
   }
 
@@ -42,8 +42,10 @@ public class PermissionService {
     return "Permission created successfully as: " + newPermission;
   }
 
-  private PermissionType handlePermission(String userId, String snippetId, PermissionType permission) {
-    UserPermission userPermission = permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
+  private PermissionType handlePermission(
+      String userId, String snippetId, PermissionType permission) {
+    UserPermission userPermission =
+        permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
     if (userPermission == null) {
       return permission;
     }
