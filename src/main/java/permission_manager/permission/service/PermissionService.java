@@ -1,6 +1,7 @@
 package permission_manager.permission.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import permission_manager.permission.model.entities.PermissionType;
 import permission_manager.permission.model.entities.UserPermission;
@@ -18,19 +19,28 @@ public class PermissionService {
     return "Processed data: " + data;
   }
 
-  public PermissionType getPermission(String userId, String snippetId) {
-    return permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
+  public String getPermission(String userId, String snippetId) {
+    try {
+        PermissionType result = permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
+        return result.toString();
+        } catch (Exception e) {
+        throw new RuntimeException("Error getting permission: " + e.getMessage());
+    }
   }
 
-  public PermissionType newPermission(String userId, String snippetId, PermissionType permission) {
+  public String newPermission(String userId, String snippetId, PermissionType permission) {
     UserPermission userPermission = new UserPermission();
     userPermission.setPermissionId(UUID.randomUUID());
     userPermission.setUserId(userId);
     userPermission.setSnippetId(snippetId);
     PermissionType newPermission = handlePermission(userId, snippetId, permission);
     userPermission.setPermission(newPermission);
-    permissionRepository.save(userPermission);
-    return newPermission;
+    try {
+      permissionRepository.save(userPermission);
+    } catch (Exception e) {
+      throw new RuntimeException("Error creating permission: " + e.getMessage());
+    }
+    return "Permission created successfully as: " + newPermission;
   }
 
   private PermissionType handlePermission(String userId, String snippetId, PermissionType permission) {

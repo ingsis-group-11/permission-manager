@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import permission_manager.permission.model.dto.CreatePermissionDTO;
 import permission_manager.permission.model.dto.PermissionRequestDTO;
-import permission_manager.permission.model.entities.PermissionType;
 import permission_manager.permission.service.PermissionService;
 
 @RestController
@@ -26,15 +25,18 @@ public class PermissionController {
   }
 
   @PostMapping("/api/permission")
-  public ResponseEntity<String> permission(@RequestBody PermissionRequestDTO request) {
-    PermissionType result = permissionService.getPermission(request.getUserId(), request.getSnippetId());
-    return ResponseEntity.ok(result.toString());
+  public ResponseEntity<String> getPermission(@RequestBody PermissionRequestDTO request) {
+    return ResponseEntity.ok
+            (permissionService
+                    .getPermission(request.getUserId(), request.getSnippetId()));
   }
 
   @PostMapping("/api/new-permission")
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDTO request) {
-    PermissionType result = permissionService.newPermission(request.getUserId(), request.getSnippetId(), request.getPermission());
-    return ResponseEntity.ok("Permission created as: " + result.toString());
+    return ResponseEntity.ok
+            (permissionService
+                    .newPermission(request.getUserId(), request.getSnippetId(), request.getPermission()));
+
   }
 }
 
