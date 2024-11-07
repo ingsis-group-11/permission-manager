@@ -6,15 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import permissionmanager.model.dto.CreatePermissionDto;
-import permissionmanager.model.dto.PermissionRequestDto;
 import permissionmanager.service.PermissionService;
 
+@RequestMapping("/api/permission")
 @RestController
 public class PermissionController {
 
@@ -23,8 +19,14 @@ public class PermissionController {
   private String getUserId() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     Jwt jwt = (Jwt) authentication.getPrincipal();
+    String userId = jwt.getClaimAsString("sub");
+    int position = userId.indexOf("|");
 
-    return jwt.getClaimAsString("sub");
+    if (position != -1) {
+      userId = userId.substring(position + 1);
+    }
+
+    return userId;
   }
 
   @Autowired
@@ -32,25 +34,19 @@ public class PermissionController {
     this.permissionService = permissionService;
   }
 
-  @PostMapping("/api/receive-data")
-  public String receiveData(@RequestBody String data) {
-    return permissionService.processData(data);
+  @GetMapping("/{snippetId}")
+  public ResponseEntity<String> getPermission(@PathVariable String snippetId) {
+    return ResponseEntity.ok(permissionService.getPermission(getUserId(), snippetId));
   }
 
-  @PostMapping("/api/permission")
-  public ResponseEntity<String> getPermission(@RequestBody PermissionRequestDto request) {
-    return ResponseEntity.ok(
-        permissionService.getPermission(request.getUserId(), request.getSnippetId()));
-  }
-
-  @PostMapping("/api/new-permission")
+  @PutMapping
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDto request) {
     return ResponseEntity.ok(
         permissionService.newPermission(
             request.getUserId(), request.getSnippetId(), request.getPermission()));
   }
 
-  @GetMapping("/api/get-snippets")
+  @GetMapping
   public ResponseEntity<List<String>> getSnippets(
       @RequestParam("from") Long from, @RequestParam("to") Long to) {
     List<String> snippets = permissionService.getSnippetsId(from, to, getUserId());
