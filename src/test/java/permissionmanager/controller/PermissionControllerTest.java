@@ -69,15 +69,9 @@ public class PermissionControllerTest {
     String snippetId = "1";
     String expectedResponse = "READ";
 
-    PermissionRequestDto request = new PermissionRequestDto();
-    request.setUserId(userId);
-    request.setSnippetId(snippetId);
-
     when(permissionService.getPermission(userId, snippetId)).thenReturn(expectedResponse);
 
-    permissionController.getPermission(request);
-
-    ResponseEntity<String> response = permissionController.getPermission(request);
+    ResponseEntity<String> response = permissionController.getPermission(snippetId);
 
     assertEquals("READ", response.getBody());
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
