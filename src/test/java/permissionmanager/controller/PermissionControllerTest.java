@@ -1,7 +1,8 @@
 package permissionmanager.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import permissionmanager.model.dto.CreatePermissionDto;
-import permissionmanager.model.dto.PermissionRequestDto;
 import permissionmanager.model.entities.PermissionType;
 import permissionmanager.service.PermissionService;
 
