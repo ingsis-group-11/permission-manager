@@ -12,6 +12,10 @@ public interface PermissionRepository extends JpaRepository<UserPermission, Stri
 
   @Query(
       "SELECT p.snippetId FROM UserPermission p WHERE "
-          + "p.snippetId BETWEEN :from AND :to AND p.userId = :userId")
-  List<String> getSnippetsId(Long from, Long to, String userId);
+          + "p.snippetId BETWEEN :from AND :to "
+          + "AND p.userId = :userId "
+          + "AND p.permission = :permissionType")
+  List<String> getSnippetsId(Integer from, Integer to, String userId, String permissionType);
+
+  void deleteAllBySnippetId(String snippetId);
 }

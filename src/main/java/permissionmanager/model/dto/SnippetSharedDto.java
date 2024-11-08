@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PermissionRequestDto {
-  private String userId;
+public class SnippetSharedDto {
+  private String toUserId;
   private String snippetId;
 }

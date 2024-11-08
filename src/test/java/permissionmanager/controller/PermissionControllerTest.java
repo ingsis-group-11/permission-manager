@@ -44,22 +44,19 @@ public class PermissionControllerTest {
   void createPermissionSuccess() {
     String userId = "1";
     String snippetId = "1";
-    String expectedResponse = "READ";
+    String expectedResponse = "Permission created successfully as: READ";
     PermissionType permissionType = PermissionType.READ;
 
     CreatePermissionDto request = new CreatePermissionDto();
-    request.setUserId(userId);
     request.setSnippetId(snippetId);
     request.setPermission(permissionType);
 
     when(permissionService.newPermission(userId, snippetId, permissionType))
         .thenReturn(expectedResponse);
 
-    permissionController.newPermission(request);
-
     ResponseEntity<String> response = permissionController.newPermission(request);
 
-    assertEquals("READ", response.getBody());
+    assertEquals(expectedResponse, response.getBody());
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
   }
 

@@ -6,14 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import permissionmanager.model.dto.CreatePermissionDto;
+import permissionmanager.model.dto.SnippetSharedDto;
+import permissionmanager.model.entities.PermissionType;
 import permissionmanager.service.PermissionService;
 
 @RequestMapping("/api/permission")
@@ -49,13 +53,41 @@ public class PermissionController {
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDto request) {
     return ResponseEntity.ok(
         permissionService.newPermission(
-            request.getUserId(), request.getSnippetId(), request.getPermission()));
+            getUserId(), request.getSnippetId(), request.getPermission()));
   }
 
   @GetMapping
   public ResponseEntity<List<String>> getSnippets(
-      @RequestParam("from") Long from, @RequestParam("to") Long to) {
-    List<String> snippets = permissionService.getSnippetsId(from, to, getUserId());
+      @RequestParam(value = "from", required = false) Integer from,
+      @RequestParam(value = "to", required = false) Integer to,
+      @RequestParam(value = "permissionType") String permissionType) {
+
+    if (from == null) {
+      from = 0;
+    }
+    if (to == null) {
+      to = Integer.MAX_VALUE;
+    }
+    PermissionType permissionTypeEnum;
+    try {
+      permissionTypeEnum = PermissionType.valueOf(permissionType);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(List.of("Invalid permission type"));
+    }
+
+    List<String> snippets =
+        permissionService.getSnippetsId(from, to, getUserId(), permissionTypeEnum);
     return ResponseEntity.ok(snippets);
+  }
+
+  @DeleteMapping("/{snippetId}")
+  public ResponseEntity<String> deletePermission(@PathVariable String snippetId) {
+    return ResponseEntity.ok(permissionService.deletePermission(getUserId(), snippetId));
+  }
+
+  @PostMapping("/share")
+  public ResponseEntity<String> shareSnippet(@RequestBody SnippetSharedDto request) {
+    return ResponseEntity.ok(
+        permissionService.shareSnippet(getUserId(), request.getSnippetId(), request.getToUserId()));
   }
 }

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,7 +33,6 @@ public class PermissionServiceTests {
     PermissionType permissionType = PermissionType.READ;
 
     UserPermission userPermission = new UserPermission();
-    userPermission.setPermissionId(UUID.randomUUID());
     userPermission.setUserId(userId);
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(permissionType);
@@ -54,7 +52,6 @@ public class PermissionServiceTests {
     PermissionType permissionType = PermissionType.READ;
 
     UserPermission userPermission = new UserPermission();
-    userPermission.setPermissionId(UUID.randomUUID());
     userPermission.setUserId(userId);
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(permissionType);
