@@ -1,5 +1,6 @@
 package permissionmanager.service;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class PermissionService {
         .collect(Collectors.toList());
   }
 
+  @Transactional
   public String deletePermission(String userId, String snippetId) {
     UserPermission userPermission =
         permissionRepository.findByUserIdAndSnippetId(userId, snippetId);

@@ -48,7 +48,7 @@ public class PermissionControllerTest {
     PermissionType permissionType = PermissionType.READ;
 
     CreatePermissionDto request = new CreatePermissionDto();
-    request.setSnippetId(snippetId);
+    request.setAssetId(snippetId);
     request.setPermission(permissionType);
 
     when(permissionService.newPermission(userId, snippetId, permissionType))
