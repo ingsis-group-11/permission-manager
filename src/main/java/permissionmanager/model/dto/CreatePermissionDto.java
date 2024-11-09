@@ -7,6 +7,6 @@ import permissionmanager.model.entities.PermissionType;
 @Getter
 @Setter
 public class CreatePermissionDto {
-  private String snippetId;
+  private String assetId;
   private PermissionType permission;
 }

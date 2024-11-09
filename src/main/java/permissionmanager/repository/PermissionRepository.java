@@ -10,12 +10,8 @@ import permissionmanager.model.entities.UserPermission;
 public interface PermissionRepository extends JpaRepository<UserPermission, String> {
   UserPermission findByUserIdAndSnippetId(String userId, String snippetId);
 
-  @Query(
-      "SELECT p.snippetId FROM UserPermission p WHERE "
-          + "p.snippetId BETWEEN :from AND :to "
-          + "AND p.userId = :userId "
-          + "AND p.permission = :permissionType")
-  List<String> getSnippetsId(Integer from, Integer to, String userId, String permissionType);
+  @Query("SELECT p FROM UserPermission p WHERE p.userId = :userId")
+  List<UserPermission> getUserPermissionsByUserId(String userId);
 
   void deleteAllBySnippetId(String snippetId);
 }

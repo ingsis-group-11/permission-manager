@@ -53,14 +53,14 @@ public class PermissionController {
   public ResponseEntity<String> newPermission(@RequestBody CreatePermissionDto request) {
     return ResponseEntity.ok(
         permissionService.newPermission(
-            getUserId(), request.getSnippetId(), request.getPermission()));
+            getUserId(), request.getAssetId(), request.getPermission()));
   }
 
   @GetMapping
   public ResponseEntity<List<String>> getSnippets(
       @RequestParam(value = "from", required = false) Integer from,
       @RequestParam(value = "to", required = false) Integer to,
-      @RequestParam(value = "permissionType") String permissionType) {
+      @RequestParam(value = "permissionType") PermissionType permissionType) {
 
     if (from == null) {
       from = 0;
@@ -68,15 +68,8 @@ public class PermissionController {
     if (to == null) {
       to = Integer.MAX_VALUE;
     }
-    PermissionType permissionTypeEnum;
-    try {
-      permissionTypeEnum = PermissionType.valueOf(permissionType);
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().body(List.of("Invalid permission type"));
-    }
 
-    List<String> snippets =
-        permissionService.getSnippetsId(from, to, getUserId(), permissionTypeEnum);
+    List<String> snippets = permissionService.getSnippetsId(from, to, getUserId(), permissionType);
     return ResponseEntity.ok(snippets);
   }
 
@@ -89,5 +82,12 @@ public class PermissionController {
   public ResponseEntity<String> shareSnippet(@RequestBody SnippetSharedDto request) {
     return ResponseEntity.ok(
         permissionService.shareSnippet(getUserId(), request.getSnippetId(), request.getToUserId()));
+  }
+
+  @PostMapping()
+  public ResponseEntity<Boolean> checkPermissions(@RequestBody CreatePermissionDto request) {
+    return ResponseEntity.ok(
+        permissionService.checkPermissions(
+            getUserId(), request.getAssetId(), request.getPermission()));
   }
 }

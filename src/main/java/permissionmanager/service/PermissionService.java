@@ -1,6 +1,7 @@
 package permissionmanager.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,20 @@ public class PermissionService {
 
   public List<String> getSnippetsId(
       Integer from, Integer to, String userId, PermissionType permissionType) {
-    return permissionRepository.getSnippetsId(from, to, userId, permissionType.toString());
+    List<UserPermission> allUserPermissions =
+        permissionRepository.getUserPermissionsByUserId(userId);
+
+    // Apply the range filtering
+    List<UserPermission> filteredPermissions =
+        allUserPermissions.stream()
+            .skip(from != null ? from : 0)
+            .limit(to != null ? to - (from != null ? from : 0) : allUserPermissions.size())
+            .collect(Collectors.toList());
+
+    return filteredPermissions.stream()
+        .filter(up -> hasPermissions(permissionType, up.getPermission()))
+        .map(UserPermission::getSnippetId)
+        .collect(Collectors.toList());
   }
 
   public String deletePermission(String userId, String snippetId) {
@@ -80,5 +94,16 @@ public class PermissionService {
     }
 
     return "Snippet shared successfully";
+  }
+
+  public boolean checkPermissions(String userId, String snippetId, PermissionType permission) {
+    UserPermission userPermission =
+        permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
+    return hasPermissions(permission, userPermission.getPermission());
+  }
+
+  private boolean hasPermissions(PermissionType permissionToBeChecked, PermissionType permission) {
+    List<PermissionType> permissions = List.of(PermissionType.READ, PermissionType.READ_WRITE);
+    return permissions.indexOf(permissionToBeChecked) <= permissions.indexOf(permission);
   }
 }
