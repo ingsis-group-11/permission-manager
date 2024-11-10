@@ -75,6 +75,10 @@ public class PermissionService {
   }
 
   public String shareSnippet(String fromUserId, String snippetId, String toUserId) {
+    if (fromUserId.equals(toUserId)) {
+      throw new IllegalArgumentException("You can't share a snippet with yourself");
+    }
+
     UserPermission userPermission =
         permissionRepository.findByUserIdAndSnippetId(fromUserId, snippetId);
 
