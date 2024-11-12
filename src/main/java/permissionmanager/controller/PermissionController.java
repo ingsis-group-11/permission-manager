@@ -1,6 +1,5 @@
 package permissionmanager.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import permissionmanager.model.dto.AllSnippetsSendDto;
 import permissionmanager.model.dto.CreatePermissionDto;
 import permissionmanager.model.dto.SnippetSharedDto;
 import permissionmanager.model.entities.PermissionType;
@@ -57,7 +57,7 @@ public class PermissionController {
   }
 
   @GetMapping
-  public ResponseEntity<List<String>> getSnippets(
+  public ResponseEntity<AllSnippetsSendDto> getSnippets(
       @RequestParam(value = "from", required = false) Integer from,
       @RequestParam(value = "to", required = false) Integer to,
       @RequestParam(value = "permissionType") PermissionType permissionType) {
@@ -69,7 +69,8 @@ public class PermissionController {
       to = Integer.MAX_VALUE;
     }
 
-    List<String> snippets = permissionService.getSnippetsId(from, to, getUserId(), permissionType);
+    AllSnippetsSendDto snippets =
+        permissionService.getSnippetsId(from, to, getUserId(), permissionType);
     return ResponseEntity.ok(snippets);
   }
 

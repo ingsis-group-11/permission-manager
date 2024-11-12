@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
+import permissionmanager.model.dto.AllSnippetsSendDto;
 import permissionmanager.model.entities.PermissionType;
 import permissionmanager.model.entities.UserPermission;
 import permissionmanager.repository.PermissionRepository;
@@ -38,11 +39,12 @@ public class PermissionService {
     return "Permission created successfully as: " + permission;
   }
 
-  public List<String> getSnippetsId(
+  public AllSnippetsSendDto getSnippetsId(
       Integer from, Integer to, String userId, PermissionType permissionType) {
     List<UserPermission> allUserPermissions =
         permissionRepository.getUserPermissionsByUserId(userId);
 
+    int maxSnippets = allUserPermissions.size();
     // Apply the range filtering
     List<UserPermission> filteredPermissions =
         allUserPermissions.stream()
@@ -50,10 +52,13 @@ public class PermissionService {
             .limit(to != null ? to - (from != null ? from : 0) : allUserPermissions.size())
             .collect(Collectors.toList());
 
-    return filteredPermissions.stream()
-        .filter(up -> hasPermissions(permissionType, up.getPermission()))
-        .map(UserPermission::getSnippetId)
-        .collect(Collectors.toList());
+    List<String> snippetsIds =
+        filteredPermissions.stream()
+            .filter(up -> hasPermissions(permissionType, up.getPermission()))
+            .map(UserPermission::getSnippetId)
+            .collect(Collectors.toList());
+
+    return AllSnippetsSendDto.builder().snippetsIds(snippetsIds).maxSnippets(maxSnippets).build();
   }
 
   @Transactional
