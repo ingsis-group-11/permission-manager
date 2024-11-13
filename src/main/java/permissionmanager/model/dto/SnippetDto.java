@@ -1,6 +1,5 @@
 package permissionmanager.model.dto;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class AllSnippetsSendDto {
-  private List<SnippetDto> snippetsIds;
-  private int maxSnippets;
+public class SnippetDto {
+  private String snippetId;
+  private String author;
 }

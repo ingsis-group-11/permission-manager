@@ -2,11 +2,13 @@ package permissionmanager.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 import permissionmanager.model.dto.AllSnippetsSendDto;
+import permissionmanager.model.dto.SnippetDto;
 import permissionmanager.model.entities.PermissionType;
 import permissionmanager.model.entities.UserPermission;
 import permissionmanager.repository.PermissionRepository;
@@ -52,13 +54,27 @@ public class PermissionService {
             .limit(to != null ? to - (from != null ? from : 0) : allUserPermissions.size())
             .collect(Collectors.toList());
 
-    List<String> snippetsIds =
+    List<SnippetDto> snippetsIds =
         filteredPermissions.stream()
             .filter(up -> hasPermissions(permissionType, up.getPermission()))
-            .map(UserPermission::getSnippetId)
+            .map(
+                snippet ->
+                    SnippetDto.builder()
+                        .snippetId(snippet.getSnippetId())
+                        .author(getAuthorId(snippet.getSnippetId()))
+                        .build())
             .collect(Collectors.toList());
 
     return AllSnippetsSendDto.builder().snippetsIds(snippetsIds).maxSnippets(maxSnippets).build();
+  }
+
+  private String getAuthorId(String snippetId) {
+    Optional<UserPermission> userPermissionOp =
+        permissionRepository.findBySnippetIdAndPermission(snippetId, PermissionType.READ_WRITE);
+    if (userPermissionOp.isEmpty()) {
+      throw new RuntimeException("Error getting author id");
+    }
+    return userPermissionOp.get().getUserId();
   }
 
   @Transactional
