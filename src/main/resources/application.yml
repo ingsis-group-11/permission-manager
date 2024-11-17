@@ -29,3 +29,7 @@ auth0:
 
 server:
   port: ${DOCKER_PORT:8003}
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
