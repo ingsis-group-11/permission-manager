@@ -20,7 +20,8 @@ public class PermissionService {
 
   public String getPermission(String userId, String snippetId) {
     try {
-      UserPermission userPermission = permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
+      UserPermission userPermission =
+          permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
       if (userPermission == null) {
         throw new RuntimeException("Permission not found");
       }

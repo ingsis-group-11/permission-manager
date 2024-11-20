@@ -1,5 +1,9 @@
 package permissionmanager.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,18 +14,11 @@ import permissionmanager.model.entities.PermissionType;
 import permissionmanager.model.entities.UserPermission;
 import permissionmanager.repository.PermissionRepository;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 public class PermissionServiceTests {
 
-  @Mock
-  private PermissionRepository permissionRepository;
+  @Mock private PermissionRepository permissionRepository;
 
-  @InjectMocks
-  private PermissionService permissionService;
+  @InjectMocks private PermissionService permissionService;
 
   @BeforeEach
   void setUp() {
@@ -54,11 +51,16 @@ public class PermissionServiceTests {
     String snippetId = "1";
     PermissionType permissionType = PermissionType.READ;
 
-    doThrow(new RuntimeException("Database error")).when(permissionRepository).save(any(UserPermission.class));
+    doThrow(new RuntimeException("Database error"))
+        .when(permissionRepository)
+        .save(any(UserPermission.class));
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionService.newPermission(userId, snippetId, permissionType);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionService.newPermission(userId, snippetId, permissionType);
+            });
 
     assertEquals("Error creating permission: Database error", exception.getMessage());
     verify(permissionRepository, times(1)).save(any(UserPermission.class));
@@ -76,7 +78,8 @@ public class PermissionServiceTests {
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(permissionType);
 
-    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId)).thenReturn(userPermission);
+    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId))
+        .thenReturn(userPermission);
 
     String response = permissionService.getPermission(userId, snippetId);
 
@@ -91,9 +94,12 @@ public class PermissionServiceTests {
 
     when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId)).thenReturn(null);
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionService.getPermission(userId, snippetId);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionService.getPermission(userId, snippetId);
+            });
 
     assertEquals("Error getting permission: Permission not found", exception.getMessage());
     verify(permissionRepository, times(1)).findByUserIdAndSnippetId(userId, snippetId);
@@ -110,7 +116,8 @@ public class PermissionServiceTests {
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(PermissionType.READ_WRITE);
 
-    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId)).thenReturn(userPermission);
+    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId))
+        .thenReturn(userPermission);
     doNothing().when(permissionRepository).deleteAllBySnippetId(snippetId);
 
     String response = permissionService.deletePermission(userId, snippetId);
@@ -131,12 +138,18 @@ public class PermissionServiceTests {
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(PermissionType.READ_WRITE);
 
-    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId)).thenReturn(userPermission);
-    doThrow(new RuntimeException("Database error")).when(permissionRepository).deleteAllBySnippetId(snippetId);
+    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId))
+        .thenReturn(userPermission);
+    doThrow(new RuntimeException("Database error"))
+        .when(permissionRepository)
+        .deleteAllBySnippetId(snippetId);
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionService.deletePermission(userId, snippetId);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionService.deletePermission(userId, snippetId);
+            });
 
     assertEquals("Error deleting permission: Database error", exception.getMessage());
     verify(permissionRepository, times(1)).findByUserIdAndSnippetId(userId, snippetId);
@@ -155,7 +168,8 @@ public class PermissionServiceTests {
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(PermissionType.READ_WRITE);
 
-    when(permissionRepository.findByUserIdAndSnippetId(fromUserId, snippetId)).thenReturn(userPermission);
+    when(permissionRepository.findByUserIdAndSnippetId(fromUserId, snippetId))
+        .thenReturn(userPermission);
     when(permissionRepository.save(any(UserPermission.class))).thenReturn(userPermission);
 
     String response = permissionService.shareSnippet(fromUserId, snippetId, toUserId);
@@ -173,9 +187,12 @@ public class PermissionServiceTests {
 
     when(permissionRepository.findByUserIdAndSnippetId(fromUserId, snippetId)).thenReturn(null);
 
-    Exception exception = assertThrows(PermissionDeniedDataAccessException.class, () -> {
-      permissionService.shareSnippet(fromUserId, snippetId, toUserId);
-    });
+    Exception exception =
+        assertThrows(
+            PermissionDeniedDataAccessException.class,
+            () -> {
+              permissionService.shareSnippet(fromUserId, snippetId, toUserId);
+            });
 
     assertEquals("You don't have permission share this snippet", exception.getMessage());
     verify(permissionRepository, times(1)).findByUserIdAndSnippetId(fromUserId, snippetId);
@@ -193,7 +210,8 @@ public class PermissionServiceTests {
     userPermission.setSnippetId(snippetId);
     userPermission.setPermission(permissionType);
 
-    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId)).thenReturn(userPermission);
+    when(permissionRepository.findByUserIdAndSnippetId(userId, snippetId))
+        .thenReturn(userPermission);
 
     boolean response = permissionService.checkPermissions(userId, snippetId, permissionType);
 

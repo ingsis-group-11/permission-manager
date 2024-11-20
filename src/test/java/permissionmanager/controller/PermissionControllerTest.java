@@ -54,7 +54,7 @@ public class PermissionControllerTest {
     request.setPermission(permissionType);
 
     when(permissionService.newPermission(userId, snippetId, permissionType))
-            .thenReturn(expectedResponse);
+        .thenReturn(expectedResponse);
 
     ResponseEntity<String> response = permissionController.newPermission(request);
 
@@ -73,11 +73,14 @@ public class PermissionControllerTest {
     request.setPermission(permissionType);
 
     when(permissionService.newPermission(userId, snippetId, permissionType))
-            .thenThrow(new RuntimeException("Error creating permission: Database error"));
+        .thenThrow(new RuntimeException("Error creating permission: Database error"));
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionController.newPermission(request);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionController.newPermission(request);
+            });
 
     assertEquals("Error creating permission: Database error", exception.getMessage());
   }
@@ -102,11 +105,14 @@ public class PermissionControllerTest {
     String snippetId = "1";
 
     when(permissionService.getPermission(userId, snippetId))
-            .thenThrow(new RuntimeException("Error getting permission: Permission not found"));
+        .thenThrow(new RuntimeException("Error getting permission: Permission not found"));
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionController.getPermission(snippetId);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionController.getPermission(snippetId);
+            });
 
     assertEquals("Error getting permission: Permission not found", exception.getMessage());
   }
@@ -131,11 +137,14 @@ public class PermissionControllerTest {
     String snippetId = "1";
 
     when(permissionService.deletePermission(userId, snippetId))
-            .thenThrow(new RuntimeException("Error deleting permission: Database error"));
+        .thenThrow(new RuntimeException("Error deleting permission: Database error"));
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionController.deletePermission(snippetId);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionController.deletePermission(snippetId);
+            });
 
     assertEquals("Error deleting permission: Database error", exception.getMessage());
   }
@@ -151,7 +160,7 @@ public class PermissionControllerTest {
     request.setToUserId(toUserId);
 
     when(permissionService.shareSnippet(fromUserId, snippetId, toUserId))
-            .thenReturn(expectedResponse);
+        .thenReturn(expectedResponse);
 
     ResponseEntity<String> response = permissionController.shareSnippet(request);
 
@@ -170,11 +179,16 @@ public class PermissionControllerTest {
     request.setToUserId(toUserId);
 
     when(permissionService.shareSnippet(fromUserId, snippetId, toUserId))
-            .thenThrow(new PermissionDeniedDataAccessException("You don't have permission share this snippet", new Exception()));
+        .thenThrow(
+            new PermissionDeniedDataAccessException(
+                "You don't have permission share this snippet", new Exception()));
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      permissionController.shareSnippet(request);
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              permissionController.shareSnippet(request);
+            });
 
     assertEquals("You don't have permission share this snippet", exception.getMessage());
   }
