@@ -2,8 +2,12 @@ package permissionmanager.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import permissionmanager.model.dto.AllSnippetsSendDto;
 import permissionmanager.model.dto.CreatePermissionDto;
+import permissionmanager.model.dto.SnippetDto;
 import permissionmanager.model.dto.SnippetSharedDto;
 import permissionmanager.model.entities.PermissionType;
 import permissionmanager.service.PermissionService;
@@ -115,6 +121,31 @@ public class PermissionControllerTest {
             });
 
     assertEquals("Error getting permission: Permission not found", exception.getMessage());
+  }
+
+  @Test
+  void getSnippetsSuccess() {
+    String userId = "1";
+    int from = 0;
+    int to = 2;
+    PermissionType permissionType = PermissionType.READ;
+
+    AllSnippetsSendDto expectedResponse = AllSnippetsSendDto.builder().build();
+    expectedResponse.setSnippetsIds(
+        List.of(
+            SnippetDto.builder().snippetId("snippet1").author("author1").build(),
+            SnippetDto.builder().snippetId("snippet2").author("author2").build()));
+    expectedResponse.setMaxSnippets(2);
+
+    when(permissionService.getSnippetsId(from, to, userId, permissionType))
+        .thenReturn(expectedResponse);
+
+    ResponseEntity<AllSnippetsSendDto> response =
+        permissionController.getSnippets(from, to, permissionType);
+
+    assertEquals(expectedResponse, response.getBody());
+    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+    verify(permissionService, times(1)).getSnippetsId(from, to, userId, permissionType);
   }
 
   @Test

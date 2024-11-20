@@ -1,8 +1,18 @@
 package permissionmanager.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.PermissionDeniedDataAccessException;
+import permissionmanager.model.dto.AllSnippetsSendDto;
 import permissionmanager.model.entities.PermissionType;
 import permissionmanager.model.entities.UserPermission;
 import permissionmanager.repository.PermissionRepository;
@@ -64,6 +75,42 @@ public class PermissionServiceTests {
 
     assertEquals("Error creating permission: Database error", exception.getMessage());
     verify(permissionRepository, times(1)).save(any(UserPermission.class));
+  }
+
+  @Test
+  void getSnippetsIdSuccess() {
+    String userId = "1";
+    PermissionType permissionType = PermissionType.READ;
+    UserPermission userPermission1 = new UserPermission();
+    userPermission1.setPermissionId(UUID.randomUUID().toString());
+    userPermission1.setUserId(userId);
+    userPermission1.setSnippetId("snippet1");
+    userPermission1.setPermission(permissionType);
+
+    UserPermission userPermission2 = new UserPermission();
+    userPermission2.setPermissionId(UUID.randomUUID().toString());
+    userPermission2.setUserId(userId);
+    userPermission2.setSnippetId("snippet2");
+    userPermission2.setPermission(permissionType);
+
+    List<UserPermission> userPermissions = List.of(userPermission1, userPermission2);
+
+    when(permissionRepository.getUserPermissionsByUserId(userId)).thenReturn(userPermissions);
+    when(permissionRepository.findBySnippetIdAndPermission("snippet1", PermissionType.READ_WRITE))
+        .thenReturn(Optional.of(userPermission1));
+    when(permissionRepository.findBySnippetIdAndPermission("snippet2", PermissionType.READ_WRITE))
+        .thenReturn(Optional.of(userPermission2));
+
+    AllSnippetsSendDto response = permissionService.getSnippetsId(0, 2, userId, permissionType);
+
+    assertNotNull(response);
+    assertEquals(2, response.getSnippetsIds().size());
+    assertEquals(2, response.getMaxSnippets());
+    verify(permissionRepository, times(1)).getUserPermissionsByUserId(userId);
+    verify(permissionRepository, times(1))
+        .findBySnippetIdAndPermission("snippet1", PermissionType.READ_WRITE);
+    verify(permissionRepository, times(1))
+        .findBySnippetIdAndPermission("snippet2", PermissionType.READ_WRITE);
   }
 
   @Test
