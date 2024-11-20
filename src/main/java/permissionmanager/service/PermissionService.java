@@ -20,11 +20,14 @@ public class PermissionService {
 
   public String getPermission(String userId, String snippetId) {
     try {
-      PermissionType result =
-          permissionRepository.findByUserIdAndSnippetId(userId, snippetId).getPermission();
+      UserPermission userPermission = permissionRepository.findByUserIdAndSnippetId(userId, snippetId);
+      if (userPermission == null) {
+        throw new RuntimeException("Permission not found");
+      }
+      PermissionType result = userPermission.getPermission();
       return result.toString();
     } catch (Exception e) {
-      throw new RuntimeException("Error getting permission: " + e.getMessage());
+      throw new RuntimeException("Error getting permission: " + e.getMessage(), e);
     }
   }
 
